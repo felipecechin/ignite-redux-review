@@ -1,6 +1,7 @@
 import { AppDispatch, AppThunk } from '@/store'
 import { PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 
+import { RejectedActionFromAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
 import { createSlice } from '@reduxjs/toolkit'
 
 export interface CounterState {
@@ -12,13 +13,23 @@ const initialState: CounterState = {
 }
 
 //returns a promise as example
-function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+function sleep(ms: number, success = true) {
+    return new Promise((resolve, reject) => setTimeout(success ? resolve : reject, ms))
 }
 
-export const newAsyncIncrement = createAsyncThunk('counter/newAsyncIncrement', async (amount: number) => {
-    await sleep(1000)
-    return amount
+export const newAsyncIncrement = createAsyncThunk<
+    number,
+    number,
+    {
+        rejectValue: string
+    }
+>('counter/newAsyncIncrement', async (amount: number, { rejectWithValue }) => {
+    try {
+        await sleep(1000, false)
+        return amount
+    } catch (error) {
+        return rejectWithValue('Ocorreu um erro')
+    }
 })
 
 export const counterSlice = createSlice({
@@ -36,9 +47,16 @@ export const counterSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(newAsyncIncrement.fulfilled, (state, action: PayloadAction<number>) => {
-            state.value += action.payload
-        })
+        builder
+            .addCase(newAsyncIncrement.fulfilled, (state, action: PayloadAction<number>) => {
+                state.value += action.payload
+            })
+            .addCase(
+                newAsyncIncrement.rejected,
+                (_state, action: RejectedActionFromAsyncThunk<typeof newAsyncIncrement>) => {
+                    console.log(action.payload)
+                }
+            )
     },
 })
 
