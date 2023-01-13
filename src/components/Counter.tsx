@@ -1,5 +1,5 @@
 import { RootState, useAppDispatch } from '@/store'
-import { asyncIncrement, decrement, increment } from '@/store/modules/counter/Counter.reducer'
+import { asyncIncrement, decrement, increment, newAsyncIncrement } from '@/store/modules/counter/Counter.reducer'
 
 import { useSelector } from 'react-redux'
 
@@ -14,7 +14,13 @@ export function Counter() {
                     aria-label='Increment async value'
                     onClick={() => dispatch(asyncIncrement())}
                 >
-                    Increment Async
+                    Async increment
+                </button>
+                <button
+                    aria-label='Increment async value'
+                    onClick={() => dispatch(newAsyncIncrement(40))}
+                >
+                    Other async increment
                 </button>
                 <button
                     aria-label='Increment async value'

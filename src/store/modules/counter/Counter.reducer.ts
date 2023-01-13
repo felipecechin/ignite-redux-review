@@ -1,6 +1,6 @@
 import { AppDispatch, AppThunk } from '@/store'
+import { PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 export interface CounterState {
@@ -10,6 +10,16 @@ export interface CounterState {
 const initialState: CounterState = {
     value: 0,
 }
+
+//returns a promise as example
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export const newAsyncIncrement = createAsyncThunk('counter/newAsyncIncrement', async (amount: number) => {
+    await sleep(1000)
+    return amount
+})
 
 export const counterSlice = createSlice({
     name: 'counter',
@@ -25,16 +35,15 @@ export const counterSlice = createSlice({
             state.value += action.payload
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(newAsyncIncrement.fulfilled, (state, action: PayloadAction<number>) => {
+            state.value += action.payload
+        })
+    },
 })
 
 // Action creators are generated for each case reducer function
 export const { increment, decrement, incrementByAmount } = counterSlice.actions
-
-export default counterSlice.reducer
-
-function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 export function asyncIncrement(): AppThunk {
     return async function (dispatch: AppDispatch) {
@@ -42,3 +51,5 @@ export function asyncIncrement(): AppThunk {
         dispatch(incrementByAmount(10))
     }
 }
+
+export default counterSlice.reducer
