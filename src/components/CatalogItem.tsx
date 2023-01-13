@@ -1,6 +1,6 @@
-import { IProduct, addProductToCartSuccess } from '@/store/cartSlice'
-
+import { IProduct } from '@/types/product'
 import { RootState } from '@/store'
+import { addProductToCartRequest } from '@/store/modules/cart/Cart.reducer'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
@@ -17,7 +17,7 @@ export function CatalogItem({ product }: CatalogItemProps) {
     })
 
     const handleAddProductToCart = useCallback(() => {
-        dispatch(addProductToCartSuccess(product))
+        dispatch(addProductToCartRequest(product))
     }, [dispatch, product])
 
     return (

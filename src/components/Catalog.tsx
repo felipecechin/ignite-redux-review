@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { CatalogItem } from './CatalogItem'
-import { IProduct } from '@/store/cartSlice'
+import { IProduct } from '@/types/product'
 import api from '@/services/api'
 
 export function Catalog() {

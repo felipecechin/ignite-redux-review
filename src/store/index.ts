@@ -1,17 +1,20 @@
-import { Action, ThunkAction, combineReducers, configureStore } from '@reduxjs/toolkit'
+import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit'
 
-import cartSlice from './cartSlice'
-import counterSlice from './counterSlice'
+import createSagaMiddleware from 'redux-saga'
+import rootReducer from './modules/rootReducer'
+import rootSaga from './modules/rootSaga'
 import { useDispatch } from 'react-redux'
 
-const combinedReducers = combineReducers({
-    counter: counterSlice,
-    cart: cartSlice,
-})
+const sagaMiddleware = createSagaMiddleware()
+const middlewares = [sagaMiddleware]
 
 export const store = configureStore({
-    reducer: combinedReducers,
+    reducer: rootReducer,
+    devTools: true,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares),
 })
+
+sagaMiddleware.run(rootSaga)
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

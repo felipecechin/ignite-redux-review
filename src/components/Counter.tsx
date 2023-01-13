@@ -1,5 +1,5 @@
 import { RootState, useAppDispatch } from '@/store'
-import { asyncIncrement, decrement, increment } from '@/store/counterSlice'
+import { asyncIncrement, decrement, increment } from '@/store/modules/counter/Counter.reducer'
 
 import { useSelector } from 'react-redux'
 

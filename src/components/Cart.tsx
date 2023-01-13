@@ -1,4 +1,4 @@
-import { ICartItem } from '@/store/cartSlice'
+import { ICartItem } from '@/types/cartItem'
 import { RootState } from '@/store'
 import { useSelector } from 'react-redux'
 
